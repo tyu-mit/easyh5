@@ -74,7 +74,7 @@ end
 opt.rootpath=path;
 
 if(~(isfield(opt,'complexformat') && iscellstr(opt.complexformat) && numel(opt.complexformat)==2))
-    opt.complexformat={'Real','Imag'};
+    opt.complexformat={'r','i'};
 end
 
 opt.dotranspose=jsonopt('Transpose',1,opt);

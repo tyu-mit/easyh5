@@ -127,7 +127,9 @@ if(isstruct(root))
         len=length(fieldnames(data));
         data=orderfields(data,[1:pos,len,pos+1:len-1]);
         try
-            data.(names{i})=cell2mat(data.(names{i}));
+            if isstruct(data.(names{i}){1})
+                data.(names{i})=cell2mat(data.(names{i}));
+            end
         catch
         end
     end

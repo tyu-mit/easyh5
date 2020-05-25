@@ -37,7 +37,7 @@ function saveh5(data, fname, varargin)
 %            ComplexFormat: {'realKey','imagKey'}: use 'realKey' and 'imagKey'
 %                  as keywords for the real and the imaginary part of a
 %                  complex array, respectively (sparse arrays not supported);
-%                  the default values are {'Real','Imag'}
+%                  the default values are {'r','i'}, the same as h5py.
 %
 %    example:
 %        a=struct('a',rand(5),'b','string','c',true,'d',2+3i,'e',{'test',[],1:5});
@@ -131,13 +131,16 @@ oid=obj2h5(sprintf('%s%d',name,idx), varargin{:});
 function oid=cell2h5(name, item,handle,level,varargin)
 
 num=numel(item);
-if(num>1)
-    idx=reshape(1:num,size(item));
-    idx=num2cell(idx);
-    oid=cellfun(@(x,id) idxobj2h5(name, id, x, handle,level,varargin{:}), item, idx, 'UniformOutput',false);
-else
-    oid=cellfun(@(x) obj2h5(name, x, handle,level,varargin{:}), item, 'UniformOutput',false);
-end
+% if(num>1)
+%     idx=reshape(1:num,size(item));
+%     idx=num2cell(idx);
+%     oid=cellfun(@(x,id) idxobj2h5(name, id, x, handle,level,varargin{:}), item, idx, 'UniformOutput',false);
+% else
+%     oid=cellfun(@(x) obj2h5(name, x, handle,level,varargin{:}), item, 'UniformOutput',false);
+% end
+idx=reshape(1:num,size(item));
+idx=num2cell(idx);
+oid=cellfun(@(x,id) idxobj2h5(name, id, x, handle,level,varargin{:}), item, idx, 'UniformOutput',false);
 
 %%-------------------------------------------------------------------------
 function oid=struct2h5(name, item,handle,level,varargin)
@@ -222,7 +225,7 @@ order = bitor(tracked,indexed);
 H5P.set_link_creation_order(gcpl,order);
 
 if(~(isfield(opt,'complexformat') && iscellstr(opt.complexformat) && numel(opt.complexformat)==2) || strcmp(opt.complexformat{1},opt.complexformat{2}))
-    opt.complexformat={'Real','Imag'};
+    opt.complexformat={'r','i'};
 end
 
 usefilter=opt.compression;
